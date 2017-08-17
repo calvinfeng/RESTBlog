@@ -5,7 +5,7 @@ except:
 
 try:
     from urllib.parse import quote_plus #python 3
-except: 
+except:
     pass
 
 from django.contrib import messages
@@ -22,12 +22,13 @@ from comments.models import Comment
 from .forms import PostForm
 from .models import Post
 
+from pdb import set_trace
 
 
 def post_create(request):
 	if not request.user.is_staff or not request.user.is_superuser:
 		raise Http404
-		
+
 	form = PostForm(request.POST or None, request.FILES or None)
 	if form.is_valid():
 		instance = form.save(commit=False)
@@ -95,7 +96,7 @@ def post_list(request):
 	queryset_list = Post.objects.active() #.order_by("-timestamp")
 	if request.user.is_staff or request.user.is_superuser:
 		queryset_list = Post.objects.all()
-	
+
 	query = request.GET.get("q")
 	if query:
 		queryset_list = queryset_list.filter(
@@ -118,16 +119,12 @@ def post_list(request):
 
 
 	context = {
-		"object_list": queryset, 
+		"object_list": queryset,
 		"title": "List",
 		"page_request_var": page_request_var,
 		"today": today,
 	}
 	return render(request, "post_list.html", context)
-
-
-
-
 
 def post_update(request, slug=None):
 	if not request.user.is_staff or not request.user.is_superuser:
@@ -146,8 +143,6 @@ def post_update(request, slug=None):
 		"form":form,
 	}
 	return render(request, "post_form.html", context)
-
-
 
 def post_delete(request, slug=None):
 	if not request.user.is_staff or not request.user.is_superuser:
